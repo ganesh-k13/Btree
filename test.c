@@ -20,6 +20,8 @@ void test_test() {
 	
 	traverse(tree, tree->root);
 	
+	BTree_destroy(tree);
+	
 	return;
 }
 

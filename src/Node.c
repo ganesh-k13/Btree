@@ -10,3 +10,17 @@ Node* node_init(bool isLeaf, int t) {
 	return node;
 }
 
+void node_destroy(Node *node, int t) {
+	
+	if(!node)
+		return;
+	
+	int i;
+	free(node->keys);
+	for(i = 0; i < 2*t; i++) {
+		node_destroy(node->children[i], t);
+	}
+	
+	free(node->children);
+	free(node);
+}

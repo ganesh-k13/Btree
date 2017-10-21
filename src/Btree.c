@@ -8,6 +8,11 @@ Btree* BTree_init(int t) {
 	return tree;
 }
 
+void BTree_destroy(Btree* tree) {
+	node_destroy(tree->root, tree->t);
+	free(tree);
+}
+
 void splitChild(Btree* tree, Node* x, int i, Node* y) {
 	Node* z = node_init(y->isLeaf, tree->t);
 	
