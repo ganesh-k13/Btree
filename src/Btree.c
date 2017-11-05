@@ -20,7 +20,7 @@ void splitChild(Btree* tree, Node* x, int i, Node* y) {
 	
 	int j;
 	for(j = 0; j < (tree->t)-1; j++) {
-		z->keys[j] = y->keys[j+tree->t];
+		z->records[j] = y->records[j+tree->t];
 	}
 	
 	if(!y->isLeaf) {
@@ -38,51 +38,51 @@ void splitChild(Btree* tree, Node* x, int i, Node* y) {
 	x->children[i+1] = z;
 	
 	for(j = x->n-1; j >= i; j--) {
-		x->keys[j+1] = x->keys[j];
+		x->records[j+1] = x->records[j];
 	}
 	
-	x->keys[i] = y->keys[tree->t - 1];
+	x->records[i] = y->records[tree->t - 1];
 	
 	x->n++;
 }
 
-void insert_non_full(Btree* tree, Node *node, int key) {
+void insert_non_full(Btree* tree, Node *node, Data *record) {
 	
 	int i = (node->n)-1;
 	
 	if(node->isLeaf) {
-		while(i >=0 && node->keys[i] > key) {
-			node->keys[i+1] = node->keys[i];
+		while(i >=0 && node->records[i].key > record->key) {
+			node->records[i+1] = node->records[i];
 			i--;
 		}
 		
-		node->keys[i+1] = key;
+		node->records[i+1] = *record;
 		node->n++;
 	}
 	
 	else {
-		while( i>= 0 && node->keys[i] > key) {
+		while( i>= 0 && node->records[i].key > record->key) {
 			i--;
 		}
 		
 		if(node->children[i+1]->n == (2*tree->t-1)) {
 			splitChild(tree, node, i+1, node->children[i+1]);
 			
-			if(node->keys[i+1] < key) {
+			if(node->records[i+1].key < record->key) {
 				i++;
 			}
 		}
 		
-		insert_non_full(tree, node->children[i+1], key);
+		insert_non_full(tree, node->children[i+1], record);
 	}
 	
 }
 
-void insert(Btree* tree, int key) {
+void insert(Btree* tree, Data *record) {
 	
 	if(!(tree->root)) {
 		tree->root = node_init(true, tree->t);
-		tree->root->keys[0] = key;
+		tree->root->records[0] = *record;
 		tree->root->n++;
 	}
 	
@@ -94,16 +94,16 @@ void insert(Btree* tree, int key) {
 			splitChild(tree, new_root, 0, tree->root);
 			
 			int i = 0;
-			if(new_root->keys[0] < key)
+			if(new_root->records[0].key < record->key)
 				i++;
 			
-			insert_non_full(tree, new_root->children[i], key);
+			insert_non_full(tree, new_root->children[i], record);
 			
 			tree->root = new_root;
 		}
 		
 		else {
-			insert_non_full(tree, tree->root, key);
+			insert_non_full(tree, tree->root, record);
 		}
 	}
 	
@@ -117,7 +117,7 @@ void traverse(Btree* tree, Node* root) {
 			traverse(tree, root->children[i]);
 		}
 		
-		printf("%d\n", root->keys[i]);
+		printf("%d\n", root->records[i].key);
 	}
 	
 	if(!root->isLeaf) {
