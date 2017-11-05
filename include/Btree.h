@@ -8,6 +8,6 @@ typedef struct Btree {
 Btree* BTree_init(int t);
 void BTree_destroy(Btree* tree);
 void splitChild(Btree* tree, Node* x, int i, Node* y);
-void insert_non_full(Btree* tree, Node *node, int key);
-void insert(Btree* tree, int key);
+void insert_non_full(Btree* tree, Node *node, Data* record);
+void insert(Btree* tree, Data* record);
 void traverse(Btree* tree, Node* root);

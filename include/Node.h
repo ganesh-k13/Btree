@@ -4,10 +4,18 @@
 #ifndef NODE_H
 #define NODE_H
 
+typedef struct Data {
+	int key;
+	char country[5];
+	char status[10];
+	int num1;
+	int num2;
+}Data;
+
 typedef struct Node {
 	bool isLeaf;
 	int n;
-	int* keys;
+	Data* records;
 	struct Node** children;
 }Node;
 
