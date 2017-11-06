@@ -21,8 +21,6 @@ void BTree_destroy(Btree* tree) {
 
 #if 1
 void splitChild(Btree* tree, Node* x, int i, Node* y) {
-	
-	// printf("enter");
 	Node* z = node_init(y->isLeaf, tree->next_pos);
 	tree->next_pos++;
 	z->n = t - 1;
@@ -45,7 +43,7 @@ void splitChild(Btree* tree, Node* x, int i, Node* y) {
 	}
 	
 	x->children[i+1] = z->pos;
-	// printf("P:%d", z->pos);
+	
 	for(j = x->n-1; j >= i; j--) {
 		x->records[j+1] = x->records[j];
 	}
@@ -54,7 +52,7 @@ void splitChild(Btree* tree, Node* x, int i, Node* y) {
 	
 	x->n++;
 	
-	// printf("%d\n", x->n);
+	// printf("%d %d %d\n", x->pos, y->pos, z->pos);
 	
 	write_file(tree, x, x->pos);
 	write_file(tree, y, y->pos);
@@ -75,7 +73,6 @@ void insert_non_full(Btree* tree, Node *node, Data *record) {
 			i--;
 		}
 		node->records[i+1] = *record;
-		// printf("R:%d\n", node->records[0].key);
 		node->n++;
 		// printf("N:%d\n", node->n);
 		write_file(tree, node, node->pos);
@@ -91,7 +88,7 @@ void insert_non_full(Btree* tree, Node *node, Data *record) {
 		
 		read_file(tree, c_i, node->children[i+1]);
 		
-		if(c_i->n == (t-1)) {
+		if(c_i->n == (2*t-1)) {
 			splitChild(tree, node, i+1, c_i);
 			
 			if(node->records[i+1].key < record->key) {
@@ -119,7 +116,6 @@ void insert(Btree* tree, Data *record) {
 	else {
 		Node *root = malloc(sizeof(Node));
 		read_file(tree, root, tree->root);
-		
 		if(root->n == (2*t-1)) {
 			Node *new_root = node_init(false, tree->next_pos);
 			tree->next_pos++;
@@ -137,22 +133,21 @@ void insert(Btree* tree, Data *record) {
 			
 			insert_non_full(tree, c_i, record);
 			
-			tree->root = new_root;
+			tree->root = new_root->pos;
+			// disp_node(new_root);
 		}
 		
 		else {
-			// printf("B:%d\n", root->n);
-			// printf("R:%d\n", root->records[0].key);
+			
 			insert_non_full(tree, root, record);
-			printf("%d\n", root->n);
-			// printf("R:%d\n", root->records[0].key);
-			// printf("A:%d\n\n", root->n);
+			// disp_node(root);
 		}
 		
 		
 	}
 	
 }
+
 #endif
 
 #if 1
@@ -160,6 +155,7 @@ void traverse(Btree* tree, int root) {
 	
 	
 	if(-1 == root) {
+		
 		return;
 	}
 	
@@ -175,3 +171,38 @@ void traverse(Btree* tree, int root) {
 	
 }
 #endif
+
+Data* search_recursive(Btree* tree, int key, Node* root) {
+	int i = 0;
+	
+	while(i < root->n && key > root->records[i].key)
+		i++;
+	
+	if(i < root->n && key == root->records[i].key)
+		return &root->records[i];
+	
+	else if(root->isLeaf)
+		return NULL;
+	else {
+		Node* c_i = malloc(sizeof(Node));
+		read_file(tree, c_i, root->children[i]);
+		return search_recursive(tree, key, c_i);
+	}
+}
+
+Data* search(Btree* tree, int key) {
+	Node* root = malloc(sizeof(Node));
+	read_file(tree, root, tree->root);
+	
+	Data* res = search_recursive(tree, key, root);
+	
+	if(!res) {
+		printf("Not Found\n");
+	}
+	
+	else {
+		printf("Res: %d\n", res->key);
+	}
+	
+	
+}

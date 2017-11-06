@@ -1,6 +1,7 @@
 #include "../include/utils.h"
 
 void write_file(Btree* ptr_tree, Node* p, int pos) {// pos = -1; use next_pos {
+	// printf("w:%d\n", pos);
 	if(pos == -1) {
 		pos = ptr_tree->next_pos++;
 	}
@@ -12,6 +13,8 @@ void write_file(Btree* ptr_tree, Node* p, int pos) {// pos = -1; use next_pos {
 }
 
 void read_file(Btree* ptr_tree, Node* p, int pos) {
+	
+	// printf("r:%d\n", pos);
 	fseek(ptr_tree->fp, pos * sizeof(Node), 0);
 	fread(p, sizeof(Node), 1, ptr_tree->fp);
 	// printf("p:%d\n", p->n);
@@ -40,7 +43,7 @@ void enter_data(Data* record, int id_num, char country[], char status[], int num
 
 Data* get_data(char *filepath, int len) {
 	
-	Data *records = malloc(sizeof(Data)*100);
+	Data *records = malloc(sizeof(Data)*len);
 	char delim = ','; char line[256];
 	int file_no = 0;
 	int i;

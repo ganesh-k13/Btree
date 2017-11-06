@@ -17,4 +17,6 @@ Btree* BTree_init(char *fname);
 void insert_non_full(Btree* tree, Node *node, Data* record);
 void insert(Btree* tree, Data* record);
 void traverse(Btree* tree, int root);
+Data* search(Btree* tree, int key);
+Data* search_recursive(Btree* tree, int key, Node* root);
 #endif

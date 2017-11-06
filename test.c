@@ -6,11 +6,13 @@
 void test_test() {
 	Btree* tree = BTree_init("tree.dat");
 	
-	Data *records = get_data("tmp/small.csv", 50);
-	
-	for(int i = 0; i < 40; i++) {
+	int len = 22;
+	Data *records = get_data("tmp/dataset.csv", len);
+	int i;
+	for(i = 0; i < len; i++) {
 		insert(tree, &records[i]);
 	}
+	insert(tree, &records[i-1]);
 	// traverse(tree, 0);
 	// FILE *fin = fopen(tree->fp, "rb");
 	
@@ -20,7 +22,11 @@ void test_test() {
 	
 	// printf("%d", temp.n);
 	
-	// traverse(tree, 0);
+	traverse(tree, tree->root);
+	
+	for(int i = 0; i < len; i++) {
+		search(tree, records[i].key);
+	}
 	
 	return;
 }
