@@ -4,14 +4,18 @@ void write_file(Btree* ptr_tree, Node* p, int pos) {// pos = -1; use next_pos {
 	if(pos == -1) {
 		pos = ptr_tree->next_pos++;
 	}
+	// printf("W:%d\n", p->records[0].key);
 	fseek(ptr_tree->fp, pos * sizeof(Node), 0);
 	fwrite(p, sizeof(Node), 1, ptr_tree->fp);
+	// fsync(ptr_tree->fp);
 	
 }
 
 void read_file(Btree* ptr_tree, Node* p, int pos) {
 	fseek(ptr_tree->fp, pos * sizeof(Node), 0);
 	fread(p, sizeof(Node), 1, ptr_tree->fp);
+	// printf("p:%d\n", p->n);
+	// disp_node(p);
 }
 
 

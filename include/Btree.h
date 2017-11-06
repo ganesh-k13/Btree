@@ -16,5 +16,5 @@ Btree* BTree_init(char *fname);
 // void splitChild(Btree* tree, Node* x, int i, Node* y);
 void insert_non_full(Btree* tree, Node *node, Data* record);
 void insert(Btree* tree, Data* record);
-// void traverse(Btree* tree, Node* root);
+void traverse(Btree* tree, int root);
 #endif

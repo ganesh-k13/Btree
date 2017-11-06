@@ -15,6 +15,7 @@ SRCDIR=src
 test:	$(ODIR)/test.o $(ODIR)/Node.o $(ODIR)/Btree.o $(ODIR)/utils.o
 		$(CC)  -Dt=3 -g -o test -g $(ODIR)/test.o $(ODIR)/Btree.o $(ODIR)/Node.o $(ODIR)/utils.o
 		rm *.dat
+		touch tree.dat
 
 $(ODIR)/test.o:	test.c 
 	$(CC)  -Dt=3 -g -w -o $(ODIR)/test.o -c test.c
@@ -30,7 +31,7 @@ $(ODIR)/utils.o: $(SRCDIR)/utils.c $(IDIR)/utils.h $(ODIR)/Node.o
 
 remdat:
 	rm *.dat
-
+	touch tree.dat
 clean:
 	rm -f $(ODIR)/*.o
 	rm test

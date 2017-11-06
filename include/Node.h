@@ -23,4 +23,5 @@ typedef struct Node {
 #endif
 
 Node* node_init(bool isLeaf, int pos);
+void disp_node(Node* node);
 // void node_destroy(Node *node, int t);

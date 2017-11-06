@@ -1,18 +1,26 @@
 #include "include/Node.h"
 #include "include/Btree.h"
 #include "include/utils.h"
+#include <unistd.h>
 
 void test_test() {
 	Btree* tree = BTree_init("tree.dat");
 	
 	Data *records = get_data("tmp/small.csv", 50);
 	
-	insert(tree, &records[0]);
+	for(int i = 0; i < 40; i++) {
+		insert(tree, &records[i]);
+	}
+	// traverse(tree, 0);
+	// FILE *fin = fopen(tree->fp, "rb");
 	
-	Node* temp = malloc(sizeof(Node));
-	read_file(tree, temp, 0);
+	// Node temp;
 	
-	disp_node(temp);
+	// fread(&temp, sizeof(Node), 1, fin);
+	
+	// printf("%d", temp.n);
+	
+	// traverse(tree, 0);
 	
 	return;
 }
