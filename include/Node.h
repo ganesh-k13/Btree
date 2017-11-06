@@ -14,12 +14,13 @@ typedef struct Data {
 
 typedef struct Node {
 	bool isLeaf;
+	int pos;
 	int n;
-	Data* records;
-	struct Node** children;
+	Data records[2*t-1];
+	int children[2*t];
 }Node;
 
 #endif
 
-Node* node_init(bool isLeaf, int t);
-void node_destroy(Node *node, int t);
+Node* node_init(bool isLeaf, int pos);
+// void node_destroy(Node *node, int t);

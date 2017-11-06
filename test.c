@@ -3,38 +3,16 @@
 #include "include/utils.h"
 
 void test_test() {
-	Btree* tree = BTree_init(3);
-	int i;
-	// insert(tree, 5);
-	// insert(tree, 6);
-	// insert(tree, 7);
-	// insert(tree, 8);
-	// insert(tree, 9);
-	// insert(tree, 10);
-	// insert(tree, 4);
-	// insert(tree, 3);
-	// insert(tree, 2);
-	// insert(tree, 1);
-	// insert(tree, 0);
-	// insert(tree, 99);
-	
-	// traverse(tree, tree->root);
-	
-	// BTree_destroy(tree);
+	Btree* tree = BTree_init("tree.dat");
 	
 	Data *records = get_data("tmp/small.csv", 50);
 	
+	insert(tree, &records[0]);
 	
-	// printf("%d\n", records[0]->key);
+	Node* temp = malloc(sizeof(Node));
+	read_file(tree, temp, 0);
 	
-	for(i = 0; i < 50; i++) {
-		insert(tree, &records[i]);
-	}
-	
-	traverse(tree, tree->root);
-	
-	// BTree_destroy(tree);
-	
+	disp_node(temp);
 	
 	return;
 }

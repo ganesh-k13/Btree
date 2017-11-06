@@ -1,5 +1,21 @@
 #include "../include/utils.h"
 
+void write_file(Btree* ptr_tree, Node* p, int pos) {// pos = -1; use next_pos {
+	if(pos == -1) {
+		pos = ptr_tree->next_pos++;
+	}
+	fseek(ptr_tree->fp, pos * sizeof(Node), 0);
+	fwrite(p, sizeof(Node), 1, ptr_tree->fp);
+	
+}
+
+void read_file(Btree* ptr_tree, Node* p, int pos) {
+	fseek(ptr_tree->fp, pos * sizeof(Node), 0);
+	fread(p, sizeof(Node), 1, ptr_tree->fp);
+}
+
+
+#if 1
 // Computes time taken given the starting and ending times
 double accum_time(struct timespec requestStart, struct timespec requestEnd) {
     
@@ -32,7 +48,7 @@ Data* get_data(char *filepath, int len) {
 	
 	FILE *fin = fopen(filepath, "r");
 	
-	while(file_no < 51 && fscanf(fin, "%d,%[^,],%[^,],%d,%d", &key, country, status, &num1, &num2)) {
+	while(file_no < len && fscanf(fin, "%d,%[^,],%[^,],%d,%d", &key, country, status, &num1, &num2)) {
 		// printf("%d %s %s %d %d\n", id_num, country, status, num1, num2);
 		enter_data(&records[file_no], key, country, status, num1, num2);
 		// printf("%d %d\n", records[file_no]->key, records[file_no]->num2);
@@ -45,3 +61,4 @@ Data* get_data(char *filepath, int len) {
 	
 	return records;
 }
+#endif
