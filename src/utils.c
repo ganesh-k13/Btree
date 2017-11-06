@@ -18,9 +18,9 @@ void enter_data(Data* record, int id_num, char country[], char status[], int num
 	return;
 }
 
-Data** get_data(Data **records, char *filepath) {
+Data* get_data(char *filepath, int len) {
 	
-	records = malloc(sizeof(Data*)*100);
+	Data *records = malloc(sizeof(Data)*100);
 	char delim = ','; char line[256];
 	int file_no = 0;
 	int i;
@@ -34,8 +34,7 @@ Data** get_data(Data **records, char *filepath) {
 	
 	while(file_no < 51 && fscanf(fin, "%d,%[^,],%[^,],%d,%d", &key, country, status, &num1, &num2)) {
 		// printf("%d %s %s %d %d\n", id_num, country, status, num1, num2);
-		records[file_no] = malloc(sizeof(Data));
-		enter_data(records[file_no], key, country, status, num1, num2);
+		enter_data(&records[file_no], key, country, status, num1, num2);
 		// printf("%d %d\n", records[file_no]->key, records[file_no]->num2);
 		file_no++;
 	}

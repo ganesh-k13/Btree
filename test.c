@@ -22,14 +22,13 @@ void test_test() {
 	
 	// BTree_destroy(tree);
 	
-	Data **records;
+	Data *records = get_data("tmp/small.csv", 50);
 	
-	records = get_data(records, "tmp/small.csv");
 	
 	// printf("%d\n", records[0]->key);
 	
 	for(i = 0; i < 50; i++) {
-		insert(tree, records[i]);
+		insert(tree, &records[i]);
 	}
 	
 	traverse(tree, tree->root);
