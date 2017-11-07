@@ -26,8 +26,7 @@ void test_test(long len) {
 	for(i = 0; i < len; i++) {
 		insert(tree, &records[i]);
 	}
-	insert(tree, &records[i-1]);
-	// traverse(tree, 0);
+	// traverse(tree, tree->root);
 	// FILE *fin = fopen(tree->fp, "rb");
 	
 	// Node temp;
@@ -38,9 +37,11 @@ void test_test(long len) {
 	
 	// traverse(tree, tree->root);
 	
-	for(int i = 0; i < len; i++) {
-		search(tree, records[i].key);
-	}
+	// for(int i = 0; i < len; i++) {
+		// search(tree, records[i].key);
+	// }
+	
+	search(tree, records[4000].key);
 	
 	return;
 }
