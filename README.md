@@ -26,17 +26,17 @@ For manual tests, run:
 
 OPTIONS:
 	
-	-b [LENGTH]
+    -b [LENGTH]
         Build B tree and flush to file bearing [LENGTH] records from dataset.csv
     -s [KEY]
         Print record details bearing the given [KEY] by reading existing file.
-	-sb [LENGTH] [KEY]
+    -sb [LENGTH] [KEY]
         Build B tree and flush to file bearing [LENGTH] records from dataset.csv and print record details bearing the given [KEY]
     -t [LENGTH] 
         Testing option.
     
 EXAMPLE:
-	./test -t 100000 75643
+    ./test -t 100000 75643
 ```
 
 To clear existing .dat file:
