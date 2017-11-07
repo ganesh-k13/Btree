@@ -1,5 +1,36 @@
 #include "../include/utils.h"
 
+#if 1
+Node* node_init(bool isLeaf, Btree *tree) {
+	
+	Node *node = malloc(sizeof(Node));
+	node->isLeaf = isLeaf;
+	node->n = 0;
+	node->pos = tree->next_pos;
+	tree->next_pos++;
+	
+	for(int i = 0; i < 2*t; i++) {
+		node->children[i] = -1;
+	}
+	
+	return node;
+}
+#endif
+
+void print_function(Data *record) {
+	
+	if(!record) {
+		printf("Record Not Found!!\n\n");
+		return;
+	}
+	
+	printf("\nKey: %d\n", record->key);
+	printf("Country: %s\n", record->country);
+	printf("Grate: %s\n", record->status);
+	printf("Score: %d\n", record->num1);
+	printf("Rate: %d\n\n", record->num2);
+}
+
 void write_file(Btree* ptr_tree, Node* p, int pos) {// pos = -1; use next_pos {
 	// printf("w:%d\n", pos);
 	if(pos == -1) {

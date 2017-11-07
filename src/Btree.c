@@ -1,18 +1,29 @@
 #include "../include/Btree.h"
 
-Btree* BTree_init(char *fname) { 
+Btree* BTree_init(char *fname, bool mode) { 
 	
+	//Flase: Create new
 	Btree *tree = ALLOC(Btree);
-	strcpy(tree->fname, fname);
+	if(!mode) {
+		strcpy(tree->fname, fname);
+		tree->fp = fopen(fname, "r+");
+		tree->root = 0;
+		tree->next_pos = 0;
+		return tree;
+	}
+
+	//True: Use existing
+	
+	FILE *fin = fopen("meta.dat", "r");
+	fread(tree, sizeof(Btree), 1, fin);
+	close(fin);
 	tree->fp = fopen(fname, "r+");
-	tree->root = 0;
-	tree->next_pos = 0;
 	return tree;
 }
 
-#if 0
+#if 1
 void BTree_destroy(Btree* tree) {
-	node_destroy(tree->root, tree->t);
+	close(tree->fp);
 	free(tree);
 }
 
@@ -21,8 +32,7 @@ void BTree_destroy(Btree* tree) {
 
 #if 1
 void splitChild(Btree* tree, Node* x, int i, Node* y) {
-	Node* z = node_init(y->isLeaf, tree->next_pos);
-	tree->next_pos++;
+	Node* z = node_init(y->isLeaf, tree);
 	z->n = t - 1;
 	
 	int j;
@@ -57,7 +67,7 @@ void splitChild(Btree* tree, Node* x, int i, Node* y) {
 	write_file(tree, x, x->pos);
 	write_file(tree, y, y->pos);
 	write_file(tree, z, z->pos);
-	
+	free(z);
 	
 }
 
@@ -97,6 +107,7 @@ void insert_non_full(Btree* tree, Node *node, Data *record) {
 		}
 		read_file(tree, c_i, node->children[i+1]);
 		insert_non_full(tree, c_i, record);
+		free(c_i);
 	}
 	
 }
@@ -105,11 +116,11 @@ void insert(Btree* tree, Data *record) {
 	
 	if(!(tree->next_pos)) {
 		tree->root = tree->next_pos;
-		Node *root_node = node_init(true, tree->next_pos);
-		tree->next_pos++;
+		Node *root_node = node_init(true, tree);
 		root_node->records[0] = *record;
 		root_node->n++;
 		write_file(tree, root_node, root_node->pos);
+		free(root_node);
 	}
 	
 	else {
@@ -117,8 +128,7 @@ void insert(Btree* tree, Data *record) {
 		read_file(tree, root, tree->root);
 		if(root->n == (2*t-1)) {
 			
-			Node *new_root = node_init(false, tree->next_pos);
-			tree->next_pos++;
+			Node *new_root = node_init(false, tree);
 			new_root->children[0] = tree->root;
 			
 			// printf("n:%d", new_root->children[0]);
@@ -137,6 +147,8 @@ void insert(Btree* tree, Data *record) {
 			// disp_node(new_root);
 			
 			write_file(tree, root, root->pos);
+			
+			free(new_root);
 		}
 		
 		else {
@@ -145,9 +157,8 @@ void insert(Btree* tree, Data *record) {
 			// disp_node(root);
 		}
 		
-		
+		free(root);
 	}
-	
 }
 
 #endif
@@ -197,15 +208,6 @@ Data* search(Btree* tree, int key) {
 	Node* root = malloc(sizeof(Node));
 	read_file(tree, root, tree->root);
 	
-	Data* res = search_recursive(tree, key, root);
-	
-	if(!res) {
-		printf("Not Found\n");
-	}
-	
-	else {
-		printf("Res: %d\n", res->key);
-	}
-	
-	
+	return search_recursive(tree, key, root);
+	 
 }

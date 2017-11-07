@@ -3,23 +3,85 @@
 #include "include/utils.h"
 #include <unistd.h>
 
-void test_search(long len, int key) {
-	Btree* tree = BTree_init("tree.dat");
+void test_search_build(long len, int key) {
+	
+	struct timespec requestStart, requestEnd;
+
+	Btree* tree = BTree_init("tree.dat", false);
 	
 	Data *records = get_data("tmp/dataset.csv", len);
 	int i;
+	
+	clock_gettime(CLOCK_REALTIME, &requestStart);
 	for(i = 0; i < len; i++) {
 		insert(tree, &records[i]);
 	}
+	clock_gettime(CLOCK_REALTIME, &requestEnd);
 	
-	search(tree, key);
+	
+	printf("\nTree built in: %f ms\n", accum_time(requestStart, requestEnd));
+	
+	clock_gettime(CLOCK_REALTIME, &requestStart);
+	Data *res = search(tree, key);
+	clock_gettime(CLOCK_REALTIME, &requestEnd);
+	
+	print_function(res);
+	
+	
+	printf("Result found in: %f ms\n\n", accum_time(requestStart, requestEnd));
+	// printf("\n%d\n", search(tree, key)->key);
+	
+	FILE *fout = fopen("meta.dat", "w");
+	fwrite(tree, sizeof(Btree), 1, fout);
+	close(fout);
+	BTree_destroy(tree);
 	
 	return;
 }
 
-void test_test(long len) {
+void test_build(long len) {
+	struct timespec requestStart, requestEnd;
+
+	Btree* tree = BTree_init("tree.dat", false);
 	
-	Btree* tree = BTree_init("tree.dat");
+	Data *records = get_data("tmp/dataset.csv", len);
+	int i;
+	
+	clock_gettime(CLOCK_REALTIME, &requestStart);
+	for(i = 0; i < len; i++) {
+		insert(tree, &records[i]);
+	}
+	clock_gettime(CLOCK_REALTIME, &requestEnd);
+	
+	FILE *fout = fopen("meta.dat", "w");
+	fwrite(tree, sizeof(Btree), 1, fout);
+	
+	close(fout);
+	
+	BTree_destroy(tree);
+	printf("\nTree built in: %f ms\n", accum_time(requestStart, requestEnd));
+}
+
+void test_search(int key) {
+	struct timespec requestStart, requestEnd;
+	
+	Btree* tree = BTree_init("tree.dat", true);
+	
+	clock_gettime(CLOCK_REALTIME, &requestStart);
+	Data *res = search(tree, key);
+	clock_gettime(CLOCK_REALTIME, &requestEnd);
+	
+	print_function(res);
+	
+	BTree_destroy(tree);
+	printf("Result found in: %f ms\n\n", accum_time(requestStart, requestEnd));
+	
+	return;
+}
+
+void test_test(long len, int key) {
+	
+	Btree* tree = BTree_init("tree.dat", false);
 	
 	Data *records = get_data("tmp/dataset.csv", len);
 	int i;
@@ -41,7 +103,11 @@ void test_test(long len) {
 		// search(tree, records[i].key);
 	// }
 	
-	search(tree, records[4000].key);
+	search(tree, key);
+	
+	
+	
+	BTree_destroy(tree);
 	
 	return;
 }
@@ -58,14 +124,20 @@ void run_tests(char** args, int no_of_args) {
 		verbose();
 	}
 	
-	if(!strcmp(args[0], "-s")) {
-        test_search(strtol(args[1], ptr, 10), strtol(args[2], ptr, 10));
+	if(!strcmp(args[0], "-sb")) {
+		test_search_build(strtol(args[1], ptr, 10), strtol(args[2], ptr, 10));	
     }
 	
-	// printf("%s", args[1]);
-	// return;
+	if(!strcmp(args[0], "-b")) {
+		test_build(strtol(args[1], ptr, 10));
+	}
+	
+	if(!strcmp(args[0], "-s")) {
+		test_search(strtol(args[1], ptr, 10));
+	}
+	
     if(!strcmp(args[0], "-t")) {
-        test_test(strtol(args[1], ptr, 10));
+        test_test(strtol(args[1], ptr, 10), strtol(args[2], ptr, 10));
     }
 }
 

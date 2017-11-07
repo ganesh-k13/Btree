@@ -1,19 +1,5 @@
 #include "../include/Node.h"
 
-#if 1
-Node* node_init(bool isLeaf, int pos) {
-	Node *node = malloc(sizeof(Node));
-	node->isLeaf = isLeaf;
-	node->n = 0;
-	node->pos = pos;
-	for(int i = 0; i < 2*t; i++) {
-		node->children[i] = -1;
-	}
-	
-	return node;
-}
-#endif
-
 void node_copy(Node *a, Node *b) {
 	a->isLeaf = b->isLeaf;
 	a->pos = b->pos;

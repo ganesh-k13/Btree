@@ -43,25 +43,15 @@ make remdat
 
 ## Deployment
 
-For using the Suffix Tree:
+For using the B Tree:
 
-* Copy SuffixTree.h and Node.h header files to the location of your source file.
-* Include SuffixTree.h and Node.h to your source file.
-* Use SuffixTree.o and Node.o object files and compile your program:
- 
-Alternative (recommended):
-
-```
-make clean
-make slib
-```
-
-Copy the libsuffix.a from lib folder and use it as static library.
-
+* Copy BTree.h and Node.h header files to the location of your source file.
+* Include BTree.h and Node.h to your source file.
+* Use BTree.o and Node.o object files and compile your program:
 
 ## Built With
 
-* [C++](http://www.cplusplus.com/) - The main backend used
+* C - The main backend used
 
 ## Authors
 
