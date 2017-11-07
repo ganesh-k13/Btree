@@ -4,8 +4,8 @@ B trees implementation written in C based on Introduction to Algorithms, CLRS.
 
 ### Prerequisites
 
-* g++ version 6.3.0 or higher
-* clang++ version 4.0.0-1ubuntu1 or higher
+* gcc (Ubuntu 5.4.1-8ubuntu1) or higher
+* clang version 4.0.0-1ubuntu1 or higher
 
 ### Installing
 
@@ -25,8 +25,13 @@ For manual tests, run:
 ./test [OPTIONS]... [PARAMETERS]...
 
 OPTIONS:
-    -s [LENGTH] [KEY]
-        Print record details bearing the given key.
+	
+	-b [LENGTH]
+        Build B tree and flush to file bearing [LENGTH] records from dataset.csv
+    -s [KEY]
+        Print record details bearing the given [KEY] by reading existing file.
+	-sb [LENGTH] [KEY]
+        Build B tree and flush to file bearing [LENGTH] records from dataset.csv and print record details bearing the given [KEY]
     -t [LENGTH] 
         Testing option.
     
@@ -61,4 +66,4 @@ For using the B Tree:
 
 * This is developed as an assignment for Advanced Algorithms Course.
 * I would like to thank my professors, Prof. NS Kumar and Prof. Channa Bankapur for their valuable advice. 
-* I would like to give credit to Prof. NS Kumar for providing basic code for file handling.
+* I would like to give credit to Prof. NS Kumar for providing necessary code for file handling.
