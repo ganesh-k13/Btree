@@ -26,9 +26,9 @@ void print_function(Data *record) {
 	
 	printf("\nKey: %d\n", record->key);
 	printf("Country: %s\n", record->country);
-	printf("Grate: %s\n", record->status);
-	printf("Score: %d\n", record->num1);
-	printf("Rate: %d\n\n", record->num2);
+	printf("Grate: %s\n", record->Grate);
+	printf("Score: %d\n", record->Score);
+	printf("Rate: %d\n\n", record->Rate);
 }
 
 void write_file(Btree* ptr_tree, Node* p, int pos) {// pos = -1; use next_pos {
@@ -61,13 +61,13 @@ double accum_time(struct timespec requestStart, struct timespec requestEnd) {
             (( requestEnd.tv_nsec - requestStart.tv_nsec ) / MILLION);
 }
 
-void enter_data(Data* record, int id_num, char country[], char status[], int num1, int num2) {
+void enter_data(Data* record, int id_num, char country[], char Grate[], int Score, int Rate) {
 	
 	record->key = id_num;
 	strcpy(record->country, country);
-	strcpy(record->status, status);
-	record->num1 = num1;
-	record->num2 = num2;
+	strcpy(record->Grate, Grate);
+	record->Score = Score;
+	record->Rate = Rate;
 	
 	return;
 }
@@ -80,16 +80,16 @@ Data* get_data(char *filepath, int len) {
 	int i;
 	int key;
 	char country[255];
-	char status[255];
-	int num1;
-	int num2;
+	char Grate[255];
+	int Score;
+	int Rate;
 	
 	FILE *fin = fopen(filepath, "r");
 	
-	while(file_no < len && fscanf(fin, "%d,%[^,],%[^,],%d,%d", &key, country, status, &num1, &num2)) {
-		// printf("%d %s %s %d %d\n", id_num, country, status, num1, num2);
-		enter_data(&records[file_no], key, country, status, num1, num2);
-		// printf("%d %d\n", records[file_no]->key, records[file_no]->num2);
+	while(file_no < len && fscanf(fin, "%d,%[^,],%[^,],%d,%d", &key, country, Grate, &Score, &Rate)) {
+		// printf("%d %s %s %d %d\n", id_num, country, Grate, Score, Rate);
+		enter_data(&records[file_no], key, country, Grate, Score, Rate);
+		// printf("%d %d\n", records[file_no]->key, records[file_no]->Rate);
 		file_no++;
 	}
 	

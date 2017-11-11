@@ -81,13 +81,13 @@ void test_search(int key) {
 
 void test_test(long len, int key) {
 	
-	Btree* tree = BTree_init("tree.dat", false);
+	Btree* tree = BTree_init("tree.dat", true);
 	
-	Data *records = get_data("tmp/dataset.csv", len);
-	int i;
-	for(i = 0; i < len; i++) {
-		insert(tree, &records[i]);
-	}
+	// Data *records = get_data("tmp/dataset.csv", len);
+	// int i;
+	// for(i = 0; i < len; i++) {
+		// insert(tree, &records[i]);
+	// }
 	// traverse(tree, tree->root);
 	// FILE *fin = fopen(tree->fp, "rb");
 	
@@ -103,13 +103,38 @@ void test_test(long len, int key) {
 		// search(tree, records[i].key);
 	// }
 	
-	search(tree, key);
+	// search(tree, key);
 	
+	Data *records = get_data("tmp/dataset.csv", len);
 	
+	for(int i = 0; i < len; i++) {
+		removeFromTree(tree, records[i].key);
+		// res = search(tree, key);
+		// print_function(res);
+	}
 	
 	BTree_destroy(tree);
 	
 	return;
+}
+
+void test_delete(int key) {
+	// struct timespec requestStart, requestEnd;
+	
+	Btree* tree = BTree_init("tree.dat", true);
+	
+	printf("Node to delete:\n");
+	Data *res = search(tree, key);
+	print_function(res);
+	
+	if(removeFromTree(tree, key)) {
+		printf("Delete successful\n");
+	}
+	
+	else {
+		printf("Delete unsuccessful\n");
+	}
+	
 }
 
 void verbose() {
@@ -134,6 +159,10 @@ void run_tests(char** args, int no_of_args) {
 	
 	if(!strcmp(args[0], "-s")) {
 		test_search(strtol(args[1], ptr, 10));
+	}
+	
+	if(!strcmp(args[0], "-d")) {
+		test_delete(strtol(args[1], ptr, 10));
 	}
 	
     if(!strcmp(args[0], "-t")) {
