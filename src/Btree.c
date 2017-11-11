@@ -62,7 +62,6 @@ void splitChild(Btree* tree, Node* x, int i, Node* y) {
 	
 	x->n++;
 	
-	// printf("%d %d %d\n", x->pos, y->pos, z->pos);
 	
 	write_file(tree, x, x->pos);
 	write_file(tree, y, y->pos);
@@ -84,7 +83,6 @@ void insert_non_full(Btree* tree, Node *node, Data *record) {
 		}
 		node->records[i+1] = *record;
 		node->n++;
-		// printf("N:%d\n", node->n);
 		write_file(tree, node, node->pos);
 		
 	}
@@ -131,7 +129,6 @@ void insert(Btree* tree, Data *record) {
 			Node *new_root = node_init(false, tree);
 			new_root->children[0] = tree->root;
 			
-			// printf("n:%d", new_root->children[0]);
 			splitChild(tree, new_root, 0, root);
 			
 			int i = 0;
@@ -144,7 +141,6 @@ void insert(Btree* tree, Data *record) {
 			insert_non_full(tree, c_i, record);
 			
 			tree->root = new_root->pos;
-			// disp_node(new_root);
 			
 			write_file(tree, root, root->pos);
 			
@@ -154,7 +150,7 @@ void insert(Btree* tree, Data *record) {
 		else {
 			
 			insert_non_full(tree, root, record);
-			// disp_node(root);
+			
 		}
 		
 		free(root);

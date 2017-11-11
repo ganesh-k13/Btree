@@ -30,7 +30,7 @@ OPTIONS:
         Build B tree and flush to file bearing [LENGTH] records from dataset.csv
     -d [KEY]
         Delete record bearing the given [KEY].
-	-s [KEY]
+    -s [KEY]
         Print record details bearing the given [KEY] by reading existing file.
     -sb [LENGTH] [KEY]
         Build B tree and flush to file bearing [LENGTH] records from dataset.csv and print record details bearing the given [KEY]
@@ -69,6 +69,7 @@ For using the B Tree:
 * This is developed as an assignment for Advanced Algorithms Course.
 * I would like to thank my professors, Prof. NS Kumar and Prof. Channa Bankapur for their valuable advice. 
 * I would like to give credit to Prof. NS Kumar for providing necessary code for file handling.
+* The delete functions are based on GeeksforGeeks implementation in C++.
 
 ## Important Note
 * The code tends to give a segmentation fault in Ubuntu. 
