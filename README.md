@@ -5,7 +5,10 @@ B trees implementation written in C based on Introduction to Algorithms, CLRS.
 ### Prerequisites
 
 * gcc (Ubuntu 5.4.1-8ubuntu1) or higher
-* clang version 4.0.0-1ubuntu1 or higher
+* clang version 4.0.0-1ubuntu1 or higher [optional] [recommended]
+* CUDA Version 9.0.176 or higher [optional]
+* Python 3.5.3 or higher
+* matplotlib==2.0.2 or higher
 
 ### Installing
 
@@ -25,7 +28,7 @@ For manual tests, run:
 ./test [OPTIONS]... [PARAMETERS]...
 
 OPTIONS:
-	
+    
     -b [LENGTH]
         Build B tree and flush to file bearing [LENGTH] records from dataset.csv
     -d [KEY]
@@ -38,14 +41,25 @@ OPTIONS:
         Testing option.
     
 EXAMPLE:
-    ./test -t 100000 75643
+    ./test -sb 100000 75643
 ```
+
+For automated tests, run:
+
+```
+python3 tester.py
+```
+
+The script does the following: 
+
+* The python script compiles the source code for t values = 512, 1024, 2048 and 4096 (my page size).
+* It builds the tree for the above t values with 1,000,000 records and plots graphs for t-values vs time.
+* It searches for 10 random keys for each t value (same ten keys) and plots t_values vs average of those times.
 
 To clear existing .dat file:
 
 ```
 make remdat
-
 ```
 
 ## Deployment
@@ -59,6 +73,8 @@ For using the B Tree:
 ## Built With
 
 * C - The main backend used
+* Python 3 - For testing
+* Matplotlib - For plotting results
 
 ## Authors
 
@@ -72,5 +88,5 @@ For using the B Tree:
 * The delete functions are based on GeeksforGeeks implementation in C++.
 
 ## Important Note
-* The code tends to give a segmentation fault in Ubuntu. 
+* The code tends to give a segmentation fault in Ubuntu. [Fixed after 'Ubuntu bug fix' commit, still need to run tests]
 * Highly recommended to use Windows Bash shell till issue is resolved.

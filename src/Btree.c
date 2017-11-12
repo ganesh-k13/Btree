@@ -1,30 +1,30 @@
 #include "../include/Btree.h"
 //132
 Btree* BTree_init(char *fname, bool mode) { 
-	
-	//Flase: Create new
-	Btree *tree = ALLOC(Btree);
-	if(!mode) {
-		strcpy(tree->fname, fname);
-		tree->fp = fopen(fname, "r+");
-		tree->root = 0;
-		tree->next_pos = 0;
-		return tree;
-	}
+    
+    //Flase: Create new
+    Btree *tree = ALLOC(Btree);
+    if(!mode) {
+        strcpy(tree->fname, fname);
+        tree->fp = fopen(fname, "r+");
+        tree->root = 0;
+        tree->next_pos = 0;
+        return tree;
+    }
 
-	//True: Use existing
-	
-	FILE *fin = fopen("meta.dat", "r");
-	fread(tree, sizeof(Btree), 1, fin);
-	close(fin);
-	tree->fp = fopen(fname, "r+");
-	return tree;
+    //True: Use existing
+    
+    FILE *fin = fopen("meta.dat", "r");
+    fread(tree, sizeof(Btree), 1, fin);
+    close(fin);
+    tree->fp = fopen(fname, "r+");
+    return tree;
 }
 
 #if 1
 void BTree_destroy(Btree* tree) {
-	close(tree->fp);
-	free(tree);
+    close(tree->fp);
+    free(tree);
 }
 
 
@@ -32,183 +32,183 @@ void BTree_destroy(Btree* tree) {
 
 #if 1
 void splitChild(Btree* tree, Node* x, int i, Node* y) {
-	Node* z = malloc(sizeof(Node)); node_init(z, y->isLeaf, tree);
-	z->n = t - 1;
-	
-	int j;
-	for(j = 0; j < t-1; j++) {
-		z->records[j] = y->records[j+t];
-	}
-	
-	if(!y->isLeaf) {
-		for(j = 0; j < t; j++) {
-			z->children[j] = y->children[j+t];
-		}
-	}
-	
-	y->n = t - 1;
-	
-	for(j = x->n; j >= i+1; j--) {
-		x->children[j+1] = x->children[j];
-	}
-	
-	x->children[i+1] = z->pos;
-	
-	for(j = x->n-1; j >= i; j--) {
-		x->records[j+1] = x->records[j];
-	}
-	
-	x->records[i] = y->records[t - 1];
-	
-	x->n++;
-	
-	
-	write_file(tree, x, x->pos);
-	write_file(tree, y, y->pos);
-	write_file(tree, z, z->pos);
-	free(z);
-	
+    Node* z = malloc(sizeof(Node)); node_init(z, y->isLeaf, tree);
+    z->n = t - 1;
+    
+    int j;
+    for(j = 0; j < t-1; j++) {
+        z->records[j] = y->records[j+t];
+    }
+    
+    if(!y->isLeaf) {
+        for(j = 0; j < t; j++) {
+            z->children[j] = y->children[j+t];
+        }
+    }
+    
+    y->n = t - 1;
+    
+    for(j = x->n; j >= i+1; j--) {
+        x->children[j+1] = x->children[j];
+    }
+    
+    x->children[i+1] = z->pos;
+    
+    for(j = x->n-1; j >= i; j--) {
+        x->records[j+1] = x->records[j];
+    }
+    
+    x->records[i] = y->records[t - 1];
+    
+    x->n++;
+    
+    
+    write_file(tree, x, x->pos);
+    write_file(tree, y, y->pos);
+    write_file(tree, z, z->pos);
+    free(z);
+    
 }
 
 
 void insert_non_full(Btree* tree, Node *node, Data *record) {
-	
-	int i = (node->n)-1;
-	
-	if(node->isLeaf) {
-		
-		while(i >=0 && node->records[i].key > record->key) {
-			node->records[i+1] = node->records[i];
-			i--;
-		}
-		node->records[i+1] = *record;
-		node->n++;
-		write_file(tree, node, node->pos);
-		
-	}
-	
-	else {
-		while( i >= 0 && node->records[i].key > record->key) {
-			i--;
-		}
-		
-		Node *c_i = malloc(sizeof(Node));
-		
-		read_file(tree, c_i, node->children[i+1]);
-		
-		if(c_i->n == (2*t-1)) {
-			splitChild(tree, node, i+1, c_i);
-			
-			if(node->records[i+1].key < record->key) {
-				i++;
-			}
-		}
-		read_file(tree, c_i, node->children[i+1]);
-		insert_non_full(tree, c_i, record);
-		free(c_i);
-	}
-	
+    
+    int i = (node->n)-1;
+    
+    if(node->isLeaf) {
+        
+        while(i >=0 && node->records[i].key > record->key) {
+            node->records[i+1] = node->records[i];
+            i--;
+        }
+        node->records[i+1] = *record;
+        node->n++;
+        write_file(tree, node, node->pos);
+        
+    }
+    
+    else {
+        while( i >= 0 && node->records[i].key > record->key) {
+            i--;
+        }
+        
+        Node *c_i = malloc(sizeof(Node));
+        
+        read_file(tree, c_i, node->children[i+1]);
+        
+        if(c_i->n == (2*t-1)) {
+            splitChild(tree, node, i+1, c_i);
+            
+            if(node->records[i+1].key < record->key) {
+                i++;
+            }
+        }
+        read_file(tree, c_i, node->children[i+1]);
+        insert_non_full(tree, c_i, record);
+        free(c_i);
+    }
+    
 }
 
 void insert(Btree* tree, Data *record) {
-	
-	if(!(tree->next_pos)) {
-		tree->root = tree->next_pos;
-		Node *root_node = malloc(sizeof(Node)); node_init(root_node, true, tree);
-		root_node->records[0] = *record;
-		root_node->n++;
-		write_file(tree, root_node, root_node->pos);
-		free(root_node);
-	}
-	
-	else {
-		Node *root = malloc(sizeof(Node));
-		read_file(tree, root, tree->root);
-		if(root->n == (2*t-1)) {
-			
-			Node *new_root = malloc(sizeof(Node)); node_init(new_root, false, tree);
-			new_root->children[0] = tree->root;
-			
-			splitChild(tree, new_root, 0, root);
-			
-			int i = 0;
-			if(new_root->records[0].key < record->key) {
-				i++;
-			}
-			
-			Node *c_i = malloc(sizeof(Node));
-			read_file(tree, c_i, new_root->children[i]);
-			insert_non_full(tree, c_i, record);
-			
-			tree->root = new_root->pos;
-			
-			write_file(tree, root, root->pos);
-			
-			free(new_root);
-		}
-		
-		else {
-			
-			insert_non_full(tree, root, record);
-			
-		}
-		
-		free(root);
-	}
+    
+    if(!(tree->next_pos)) {
+        tree->root = tree->next_pos;
+        Node *root_node = malloc(sizeof(Node)); node_init(root_node, true, tree);
+        root_node->records[0] = *record;
+        root_node->n++;
+        write_file(tree, root_node, root_node->pos);
+        free(root_node);
+    }
+    
+    else {
+        Node *root = malloc(sizeof(Node));
+        read_file(tree, root, tree->root);
+        if(root->n == (2*t-1)) {
+            
+            Node *new_root = malloc(sizeof(Node)); node_init(new_root, false, tree);
+            new_root->children[0] = tree->root;
+            
+            splitChild(tree, new_root, 0, root);
+            
+            int i = 0;
+            if(new_root->records[0].key < record->key) {
+                i++;
+            }
+            
+            Node *c_i = malloc(sizeof(Node));
+            read_file(tree, c_i, new_root->children[i]);
+            insert_non_full(tree, c_i, record);
+            
+            tree->root = new_root->pos;
+            
+            write_file(tree, root, root->pos);
+            
+            free(new_root);
+        }
+        
+        else {
+            
+            insert_non_full(tree, root, record);
+            
+        }
+        
+        free(root);
+    }
 }
 
 #endif
 
 #if 1
 void traverse(Btree* tree, int root) {
-	
-	if(-1 == root) {	
-		return;
-	}
-	
-	Node *to_print = malloc(sizeof(Node));
-	
-	read_file(tree, to_print, root);
-	
-	disp_node(to_print);
-	
-	for(int i = 0; i < 2*t; i++) {
-		traverse(tree, to_print->children[i]);
-	}
-	
-	free(to_print);
-	
+    
+    if(-1 == root) {    
+        return;
+    }
+    
+    Node *to_print = malloc(sizeof(Node));
+    
+    read_file(tree, to_print, root);
+    
+    disp_node(to_print);
+    
+    for(int i = 0; i < 2*t; i++) {
+        traverse(tree, to_print->children[i]);
+    }
+    
+    free(to_print);
+    
 }
 #endif
 
 Data* search_recursive(Btree* tree, int key, Node* root) {
-	int i = 0;
-	
-	while(i < root->n && key > root->records[i].key)
-		i++;
-	
-	
-	if(i < root->n && key == root->records[i].key)
-		return &root->records[i];
-	
-	
-	else if(root->isLeaf) {
-		return NULL;
-	}
-	else {
-		Node* c_i = malloc(sizeof(Node));
-		read_file(tree, c_i, root->children[i]);
-		return search_recursive(tree, key, c_i);
-	}
+    int i = 0;
+    
+    while(i < root->n && key > root->records[i].key)
+        i++;
+    
+    
+    if(i < root->n && key == root->records[i].key)
+        return &root->records[i];
+    
+    
+    else if(root->isLeaf) {
+        return NULL;
+    }
+    else {
+        Node* c_i = malloc(sizeof(Node));
+        read_file(tree, c_i, root->children[i]);
+        return search_recursive(tree, key, c_i);
+    }
 }
 
 Data* search(Btree* tree, int key) {
-	
-	Node* root = malloc(sizeof(Node));
-	read_file(tree, root, tree->root);
-	
-	return search_recursive(tree, key, root);
-	 
+    
+    Node* root = malloc(sizeof(Node));
+    read_file(tree, root, tree->root);
+    
+    return search_recursive(tree, key, root);
+     
 }
 
 int findKey(Node* node, int k) {
@@ -220,7 +220,7 @@ int findKey(Node* node, int k) {
 
 bool removeNode(Btree* tree, Node* node, int k) {
     int idx = findKey(node, k);
-	bool res;
+    bool res;
     // The key to be removed is present in this node
     if (idx < node->n && node->records[idx].key == k) {
  
@@ -230,8 +230,8 @@ bool removeNode(Btree* tree, Node* node, int k) {
             res = removeFromLeaf(tree, node, idx);
         else
             res = removeFromNonLeaf(tree, node, idx);
-		
-		write_file(tree, node, node->pos);
+        
+        write_file(tree, node, node->pos);
     }
     else {
  
@@ -248,10 +248,10 @@ bool removeNode(Btree* tree, Node* node, int k) {
  
         // If the child where the key is supposed to exist has less that t keys,
         // we fill that child
-		
-		Node *c_i = malloc(sizeof(Node));
-		read_file(tree, c_i, node->children[idx]);
-		
+        
+        Node *c_i = malloc(sizeof(Node));
+        read_file(tree, c_i, node->children[idx]);
+        
         if (c_i->n < t)
             fill(tree, node, idx);
  
@@ -259,16 +259,16 @@ bool removeNode(Btree* tree, Node* node, int k) {
         // child and so we recurse on the (idx-1)th child. Else, we recurse on the
         // (idx)th child which now has atleast t keys
         if (flag && idx > node->n) {
-			Node *sibling = malloc(sizeof(Node));
-			read_file(tree, sibling, node->children[idx-1]);
+            Node *sibling = malloc(sizeof(Node));
+            read_file(tree, sibling, node->children[idx-1]);
             removeNode(tree, sibling, k);
-			write_file(tree, sibling, sibling->pos);
-		}
+            write_file(tree, sibling, sibling->pos);
+        }
         else
             removeNode(tree, c_i, k);
-		
-		write_file(tree, c_i, c_i->pos);
-		res = true;
+        
+        write_file(tree, c_i, c_i->pos);
+        res = true;
     }
     return res;
 }
@@ -290,13 +290,13 @@ bool removeFromLeaf (Btree* tree, Node *node, int idx) {
 bool removeFromNonLeaf(Btree* tree, Node *node, int idx) {
  
     int k = node->records[idx].key;
-	bool res;
-	
-	Node *child = malloc(sizeof(Node));
-	Node *sibling = malloc(sizeof(Node));
-	
-	read_file(tree, child, node->children[idx]);
-	read_file(tree, sibling, node->children[idx-1]);
+    bool res;
+    
+    Node *child = malloc(sizeof(Node));
+    Node *sibling = malloc(sizeof(Node));
+    
+    read_file(tree, child, node->children[idx]);
+    read_file(tree, sibling, node->children[idx-1]);
  
     // If the child that precedes k (C[idx]) has atleast t keys,
     // find the predecessor 'pred' of k in the subtree rooted at
@@ -328,21 +328,21 @@ bool removeFromNonLeaf(Btree* tree, Node *node, int idx) {
         merge(tree, node, idx);
         res = removeNode(tree, child, k);
     }
-	
-	write_file(tree, child, child->pos);
-	write_file(tree, sibling, sibling->pos);
-	
+    
+    write_file(tree, child, child->pos);
+    write_file(tree, sibling, sibling->pos);
+    
     return res;
 }
  
 // A function to get predecessor of keys[idx]
 Data *getPred(Btree* tree, Node *node, int idx) {
     // Keep moving to the right most node until we reach a leaf
-	
-	Node *curr = malloc(sizeof(Node));
-	read_file(tree, curr, node->children[idx]);
+    
+    Node *curr = malloc(sizeof(Node));
+    read_file(tree, curr, node->children[idx]);
     while (!curr->isLeaf)
-		read_file(tree, curr, curr->children[curr->n]);
+        read_file(tree, curr, curr->children[curr->n]);
         
     // Return the last key of the leaf
     return &(curr->records[curr->n-1]);
@@ -351,8 +351,8 @@ Data *getPred(Btree* tree, Node *node, int idx) {
 Data *getSucc(Btree* tree, Node *node, int idx) {
  
     // Keep moving the left most node starting from C[idx+1] until we reach a leaf
-	Node *curr = malloc(sizeof(Node));
-	read_file(tree, curr, node->children[idx]);
+    Node *curr = malloc(sizeof(Node));
+    read_file(tree, curr, node->children[idx]);
     while (!curr->isLeaf)
         read_file(tree, curr, curr->children[0]);
  
@@ -363,10 +363,10 @@ Data *getSucc(Btree* tree, Node *node, int idx) {
 // A function to fill child C[idx] which has less than t-1 keys
 void fill(Btree* tree, Node *node, int idx) {
  
-	Node *c_prev = malloc(sizeof(Node));
-	Node *c_succ = malloc(sizeof(Node));
-	read_file(tree, c_prev, node->children[idx-1]);
-	read_file(tree, c_succ, node->children[idx+1]);
+    Node *c_prev = malloc(sizeof(Node));
+    Node *c_succ = malloc(sizeof(Node));
+    read_file(tree, c_prev, node->children[idx-1]);
+    read_file(tree, c_succ, node->children[idx+1]);
     // If the previous child(C[idx-1]) has more than t-1 keys, borrow a key
     // from that child
     if (idx!=0 && c_prev->n>=t)
@@ -392,12 +392,12 @@ void fill(Btree* tree, Node *node, int idx) {
 // A function to borrow a key from C[idx-1] and insert it
 // into C[idx]
 void borrowFromPrev(Btree* tree, Node *node, int idx) {
-	Node *child = malloc(sizeof(Node));
-	Node *sibling = malloc(sizeof(Node));
-	
-	read_file(tree, child, node->children[idx]);
-	read_file(tree, sibling, node->children[idx-1]);
-	
+    Node *child = malloc(sizeof(Node));
+    Node *sibling = malloc(sizeof(Node));
+    
+    read_file(tree, child, node->children[idx]);
+    read_file(tree, sibling, node->children[idx-1]);
+    
     // The last key from C[idx-1] goes up to the parent and key[idx-1]
     // from parent is inserted as the first key in C[idx]. Thus, the  loses
     // sibling one key and child gains one key
@@ -425,11 +425,11 @@ void borrowFromPrev(Btree* tree, Node *node, int idx) {
  
     child->n += 1;
     sibling->n -= 1;
-	
-	write_file(tree, node, node->pos);
-	write_file(tree, child, child->pos);
-	write_file(tree, sibling, sibling->pos);
-	
+    
+    write_file(tree, node, node->pos);
+    write_file(tree, child, child->pos);
+    write_file(tree, sibling, sibling->pos);
+    
     return;
 }
  
@@ -437,11 +437,11 @@ void borrowFromPrev(Btree* tree, Node *node, int idx) {
 // it in C[idx]
 void borrowFromNext(Btree* tree, Node *node, int idx) {
  
-	Node *child = malloc(sizeof(Node));
-	Node *sibling = malloc(sizeof(Node));
-	
-	read_file(tree, child, node->children[idx]);
-	read_file(tree, sibling, node->children[idx+1]);
+    Node *child = malloc(sizeof(Node));
+    Node *sibling = malloc(sizeof(Node));
+    
+    read_file(tree, child, node->children[idx]);
+    read_file(tree, sibling, node->children[idx+1]);
  
     // keys[idx] is inserted as the last key in C[idx]
     child->records[(child->n)] = node->records[idx];
@@ -468,11 +468,11 @@ void borrowFromNext(Btree* tree, Node *node, int idx) {
     // respectively
     child->n += 1;
     sibling->n -= 1;
-	
-	write_file(tree, node, node->pos);
-	write_file(tree, child, child->pos);
-	write_file(tree, sibling, sibling->pos);
-	
+    
+    write_file(tree, node, node->pos);
+    write_file(tree, child, child->pos);
+    write_file(tree, sibling, sibling->pos);
+    
     return;
 }
  
@@ -480,11 +480,11 @@ void borrowFromNext(Btree* tree, Node *node, int idx) {
 // C[idx+1] is freed after merging
 void merge(Btree* tree, Node *node, int idx) {
     
-	Node *child = malloc(sizeof(Node));
-	Node *sibling = malloc(sizeof(Node));
-	
-	read_file(tree, child, node->children[idx]);
-	read_file(tree, sibling, node->children[idx+1]);
+    Node *child = malloc(sizeof(Node));
+    Node *sibling = malloc(sizeof(Node));
+    
+    read_file(tree, child, node->children[idx]);
+    read_file(tree, sibling, node->children[idx+1]);
  
     // Pulling a key from the current node and inserting it into (t-1)th
     // position of C[idx]
@@ -516,15 +516,15 @@ void merge(Btree* tree, Node *node, int idx) {
  
     // Freeing the memory occupied by sibling
     write_file(tree, node, node->pos);
-	write_file(tree, child, child->pos);
-	write_file(tree, sibling, sibling->pos);
+    write_file(tree, child, child->pos);
+    write_file(tree, sibling, sibling->pos);
     return;
 }
 
 bool removeFromTree(Btree* tree, int key) {
-	
-	Node *root = malloc(sizeof(Node));
-	read_file(tree, root, tree->root);
-	return removeNode(tree, root, key);
-	
+    
+    Node *root = malloc(sizeof(Node));
+    read_file(tree, root, tree->root);
+    return removeNode(tree, root, key);
+    
 }
