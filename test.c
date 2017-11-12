@@ -105,6 +105,11 @@ void test_test(long len, int key) {
     
     // search(tree, key);
     
+	Node n;
+	long length = sizeof(n);
+	printf("%ld\n", length);
+	return;
+	
     Data *records = get_data("tmp/dataset.csv", len);
     
     for(int i = 0; i < len; i++) {

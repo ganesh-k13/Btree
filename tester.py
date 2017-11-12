@@ -6,7 +6,7 @@ import re
 
 testcases = 20
 
-t_values = [512, 1024, 2048, 4096] # 4096 is my page size, you can find yours by getconf PAGESIZE
+t_values = [2**i for i in range(2, 10)] 
     
 
 def build_tree(t, records_num):
@@ -24,7 +24,6 @@ def build_tree(t, records_num):
 
 def test_search(key):
     
-    
     p = subprocess.Popen(['./test', '-s', str(key)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     out, err = p.communicate()
     
@@ -36,7 +35,7 @@ def test_search(key):
     
     
 if __name__ == "__main__":
-    records_num = 1000000
+    records_num = 100000
     build_times = list()
     avg_times = list()
     search_items = [randint(1, 10000000) for i in range(10)]

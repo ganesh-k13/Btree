@@ -55,7 +55,7 @@ python3 tester.py
 
 The script does the following: 
 
-* The python script compiles the source code for t values = 512, 1024, 2048 and 4096 (my page size).
+* The python script compiles the source code for t values = 2^i for i in [2, 10).
 * It builds the tree for the above t values with 1,000,000 records and plots graphs for t-values vs time.
 * It searches for 10 random keys for each t value (same ten keys) and plots t_values vs average of those times.
 
