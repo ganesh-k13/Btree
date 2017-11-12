@@ -16,7 +16,10 @@ First compile the project on your local system by:
 
 ```
 make clean
-make
+make T=[T_VALUE]
+
+Example:
+    make T=1024
 ```
 For testing if it works, see Running tests below
 
