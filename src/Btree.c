@@ -32,7 +32,7 @@ void BTree_destroy(Btree* tree) {
 
 #if 1
 void splitChild(Btree* tree, Node* x, int i, Node* y) {
-	Node* z = node_init(y->isLeaf, tree);
+	Node* z = malloc(sizeof(Node)); node_init(z, y->isLeaf, tree);
 	z->n = t - 1;
 	
 	int j;
@@ -114,7 +114,7 @@ void insert(Btree* tree, Data *record) {
 	
 	if(!(tree->next_pos)) {
 		tree->root = tree->next_pos;
-		Node *root_node = node_init(true, tree);
+		Node *root_node = malloc(sizeof(Node)); node_init(root_node, true, tree);
 		root_node->records[0] = *record;
 		root_node->n++;
 		write_file(tree, root_node, root_node->pos);
@@ -126,7 +126,7 @@ void insert(Btree* tree, Data *record) {
 		read_file(tree, root, tree->root);
 		if(root->n == (2*t-1)) {
 			
-			Node *new_root = node_init(false, tree);
+			Node *new_root = malloc(sizeof(Node)); node_init(new_root, false, tree);
 			new_root->children[0] = tree->root;
 			
 			splitChild(tree, new_root, 0, root);

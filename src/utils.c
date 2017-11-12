@@ -1,9 +1,8 @@
 #include "../include/utils.h"
 
 #if 1
-Node* node_init(bool isLeaf, Btree *tree) {
+void node_init(Node *node, bool isLeaf, Btree *tree) {
 	
-	Node *node = malloc(sizeof(Node));
 	node->isLeaf = isLeaf;
 	node->n = 0;
 	node->pos = tree->next_pos;
@@ -13,7 +12,6 @@ Node* node_init(bool isLeaf, Btree *tree) {
 		node->children[i] = -1;
 	}
 	
-	return node;
 }
 #endif
 
