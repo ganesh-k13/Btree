@@ -85,10 +85,10 @@ For using the B Tree:
 
 ## Acknowledgments
 
-* This is developed as an assignment for Advanced Algorithms Course.
-* I would like to thank my professors, Prof. NS Kumar and Prof. Channa Bankapur for their valuable advice. 
-* I would like to give credit to Prof. NS Kumar for providing necessary code for file handling.
-* The delete functions are based on GeeksforGeeks implementation in C++.
+	* This is developed as an assignment for Advanced Algorithms Course.
+	* I would like to thank my professors, Prof. NS Kumar and Prof. Channa Bankapur for their valuable advice. 
+	* I would like to give credit to Prof. NS Kumar for providing necessary code for file handling.
+	* The delete functions are based on GeeksforGeeks implementation in C++.
 
 ## Important Note
 * The code tends to give a segmentation fault in Ubuntu. [Fixed after 'Ubuntu bug fix' commit, still need to run tests]

@@ -118,13 +118,14 @@ void test_test(long len, int key) {
         // print_function(res);
     }
     
-    BTree_destroy(tree);
+    
+	BTree_destroy(tree);
     
     return;
 }
 
 void test_delete(int key) {
-    // struct timespec requestStart, requestEnd;
+    struct timespec requestStart, requestEnd;
     
     Btree* tree = BTree_init("tree.dat", true);
     
@@ -132,14 +133,19 @@ void test_delete(int key) {
     Data *res = search(tree, key);
     print_function(res);
     
-    if(removeFromTree(tree, key)) {
+	clock_gettime(CLOCK_REALTIME, &requestStart);
+	bool isDelete = removeFromTree(tree, key);
+	clock_gettime(CLOCK_REALTIME, &requestEnd);
+	
+    if(isDelete) {
         printf("Delete successful\n");
     }
-    
+	  
     else {
         printf("Delete unsuccessful\n");
     }
-    
+    printf("Result found in: %f ms\n\n", accum_time(requestStart, requestEnd));
+	BTree_destroy(tree);
 }
 
 void verbose() {
