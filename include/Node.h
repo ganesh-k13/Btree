@@ -7,9 +7,9 @@
 typedef struct Data {
 	int key;
 	char country[5];
-	char status[10];
-	int num1;
-	int num2;
+	char Grate[10];
+	int Score;
+	int Rate;
 }Data;
 
 typedef struct Node {

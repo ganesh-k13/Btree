@@ -6,6 +6,7 @@
 
 #define MILLION 1E6
 
-void enter_data(Data* record, int id_num, char country[], char status[], int num1, int num2);
-Data **get_data(Data **data, char *filepath);
+void enter_data(Data* record, int id_num, char country[], char Grate[], int Score, int Rate);
+Data *get_data(char *filepath, int len);
 double accum_time(struct timespec requestStart, struct timespec requestEnd);
+void print_function(Data *node);
