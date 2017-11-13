@@ -124,3 +124,24 @@ void traverse(Btree* tree, Node* root) {
 		traverse(tree, root->children[i]);
 	}
 }
+
+Data *search(Node *node, int k) {
+    // Find the first key greater than or equal to k
+	
+    int i = 0;
+    while (i < node->n && k > node->records[i].key) {
+		i++;
+	}
+	
+    // If the found key is equal to k, return this node
+    if (node->records[i].key == k) {
+        return &node->records[i];
+	}
+ 
+    // If key is not found here and this is a leaf node
+    if (node->isLeaf == true) {
+        return NULL;
+	}
+    // Go to the appropriate child
+    return search(node->children[i], k);
+}

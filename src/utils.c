@@ -7,6 +7,23 @@ double accum_time(struct timespec requestStart, struct timespec requestEnd) {
             (( requestEnd.tv_nsec - requestStart.tv_nsec ) / MILLION);
 }
 
+
+Btree* build(long len) {
+	Data *records;
+	
+	records = get_data("tmp/dataset.csv", len);
+	
+	// printf("%d\n", records[0]->key);
+	
+	Btree* tree = BTree_init(3);
+	for(int i = 0; i < len; i++) {
+		insert(tree, &records[i]);
+	}
+	
+	return tree;
+	
+}
+
 void enter_data(Data* record, int id_num, char country[], char Grate[], int Score, int Rate) {
     
     record->key = id_num;
