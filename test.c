@@ -27,7 +27,12 @@ void test_search(long len, int key) {
 	printf("\nTree built in: %f ms\n", accum_time(requestStart, requestEnd));
 }
 
-void test_delete(int key) {
+void test_delete(long len, int key) {
+	Btree* tree = build(len);
+	
+	print_function(search(tree->root, key));
+	removeNode(tree->root, key, tree->t);
+	print_function(search(tree->root, key));
 	
 }
 
@@ -74,7 +79,7 @@ void run_tests(char** args, int no_of_args) {
     }
     
     if(!strcmp(args[0], "-d")) {
-        test_delete(strtol(args[1], ptr, 10));
+        test_delete(strtol(args[1], ptr, 10), strtol(args[2], ptr, 10));
     }
     
     if(!strcmp(args[0], "-t")) {
