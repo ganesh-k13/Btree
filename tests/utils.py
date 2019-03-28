@@ -14,13 +14,13 @@ t_values = [2**i for i in range(2, 12)]
 def build_tree(t, records_num):
 	print("\nCompiling for T="+str(t)+"....")
 	# pdb.set_trace()
-	p = subprocess.Popen(['make', '-C', '../', 'clean'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+	p = subprocess.Popen(['make', 'clean'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 	sleep(3)
-	p = subprocess.Popen(['make', '-C', '../','T='+str(t)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+	p = subprocess.Popen(['make', 'T='+str(t)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 	out, err = p.communicate()
 	print("Compiling done....")
 	print("\nBuilding tree....")
-	p = subprocess.Popen(['../test', '-b', str(records_num)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+	p = subprocess.Popen(['./test', '-b', str(records_num)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 	out, err = p.communicate()
 	print(out)
 	return float((re.findall("\d+\.\d+", str(out)))[0])
@@ -28,7 +28,7 @@ def build_tree(t, records_num):
 def test_search(key):
     
 	print("Searching for: "+str(key)+" ....")
-	p = subprocess.Popen(['../test', '-s', str(key)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+	p = subprocess.Popen(['./test', '-s', str(key)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 	out, err = p.communicate()
 
 	time = float((re.findall("\d+\.\d+", str(out)))[0])
@@ -40,7 +40,7 @@ def test_search(key):
 def test_delete(key):
 	
 	print("Deleting: "+str(key)+" ....")
-	p = subprocess.Popen(['../test', '-d', str(key)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+	p = subprocess.Popen(['./test', '-d', str(key)], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 	out, err = p.communicate()
 
 	return float((re.findall("\d+\.\d+", str(out)))[0])
