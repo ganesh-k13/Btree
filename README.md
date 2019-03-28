@@ -19,7 +19,20 @@ make clean
 make T=[T_VALUE]
 
 Example:
-    make T=1024
+
+root@ubuntu:/var/ws/Btree# ./test -sb 100000 782891
+
+Tree built in: 4165.050387 ms
+
+Key: 782891
+Country: USA
+Grate: PACL
+Score: 45
+Rate: 22
+
+Result found in: 0.055295 ms
+
+
 ```
 For testing if it works, see Running tests below
 
