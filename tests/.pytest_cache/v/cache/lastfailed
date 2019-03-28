@@ -1,0 +1,5 @@
+{
+  "test_build.py::test_build_records": true,
+  "test_build.py::test_build_small": true,
+  "test_build.py::test_build_t_values": true
+}
