@@ -1,5 +1,7 @@
 # B Tree
 
+[![Build Status](https://travis-ci.org/ganesh-k13/Btree.svg?branch=file-implementation)](https://travis-ci.org/ganesh-k13/Btree)
+
 B trees implementation written in C based on Introduction to Algorithms, CLRS.
 
 ### Prerequisites

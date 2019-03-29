@@ -1,0 +1,5 @@
+[
+  "tests/test_build.py::test_build_small",
+  "tests/test_build.py::test_build_t_values",
+  "tests/test_build.py::test_build_records"
+]
