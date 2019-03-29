@@ -15,6 +15,9 @@ matrix:
     
 sudo: required
 
+before_install:
+  - mkdir obj/
+
 services:
   - docker
 
