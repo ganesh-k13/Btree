@@ -96,7 +96,7 @@ For using the B Tree:
 
 ## Authors
 
-* **Ganesh K.** - [DarkFate13](https://github.com/DarkFate13)
+* **Ganesh K.** - [LinkedIn](https://www.linkedin.com/in/ganesh-kathiresan/)
 
 ## Acknowledgments
 
