@@ -1,0 +1,4 @@
+Name: libdivide
+Files: None
+License: ISC
+  For license text, see tools/label-bot-license.txt
